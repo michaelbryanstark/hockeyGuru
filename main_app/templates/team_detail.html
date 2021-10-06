@@ -22,6 +22,33 @@
       </span>
     </a>
   </div>
+  <form class="mb-5" action="{% url 'player_create' team.pk %}" method="post">
+    {% csrf_token %}
+    <div class="field has-addons">
+      <div class="control">
+        <input
+          class="input"
+          type="text"
+          name="player_name"
+          placeholder="Player Name"
+          required
+        />
+      </div>
+      <div class="control">
+        <input
+          class="input"
+          type="number"
+          name="jersey_number"
+          placeholder="Jersey Number"
+          min="0"
+          required
+        />
+      </div>
+      <div class="control">
+        <input class="button is-primary" type="submit" value="Add Player" />
+      </div>
+    </div>
+  </form>
   <div class="detail__players">
     <h3 class="title is-3">Players</h3>
 
@@ -48,3 +75,8 @@
 </div>
 
 {% endblock %}
+
+
+
+
+

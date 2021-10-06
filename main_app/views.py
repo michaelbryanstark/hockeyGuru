@@ -1,8 +1,8 @@
 from django.shortcuts import render
-from django.views import View # <- View class to handle requests
-from django.http import HttpResponse # <- a class to handle sending a type of response
+from django.views import View 
+from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
-from .models import Team
+from .models import Team, Player
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from django.urls import reverse
@@ -53,3 +53,11 @@ class TeamDelete(DeleteView):
     model = Team
     template_name = "team_delete_confirmation.html"
     success_url = "/teams/"
+    
+class PlayerCreate(View):
+    def post(self, request, pk):
+        player_name = request.POST.get("player_name")
+        jersey_number = request.POST.get("jersey_number")
+        team = Team.objects.get(pk=pk)
+        Player.objects.create(player_name=player_name, jersey_number=jersey_number, team=team)
+        return redirect('team_detail', pk=pk)
