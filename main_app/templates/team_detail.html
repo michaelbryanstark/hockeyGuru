@@ -22,6 +22,25 @@
       </span>
     </a>
   </div>
+  <div class="detail__players">
+    <h3 class="title is-3">Players</h3>
+
+    {% for player in team.players.all %}
+    <div class="player">
+      <span>{{forloop.counter}}</span>
+      <span><b>{{player.player_name}}</b></span>
+      <span>{{player.jersey_number}}</span>
+    </div>
+    {% empty %}
+    <article class="message">
+      <div class="message-header">
+        <p>No Players Available</p>
+      </div>
+    </article>
+
+    {% endfor %}
+  </div>
+  </div>
   <div class="detail__about">
     <h4 class="title is-4">About</h4>
     <p>{{team.bio}}</p>
