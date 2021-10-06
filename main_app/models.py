@@ -13,3 +13,11 @@ class Team(models.Model):
 
     class Meta:
         ordering = ['name']
+        
+class Player(models.Model):
+    player_name = models.CharField(max_length=150)
+    jersey_number = models.IntegerField(default=0)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players")
+    
+    def __str__(self):
+        return self.player_name
