@@ -21,3 +21,10 @@ class Player(models.Model):
     
     def __str__(self):
         return self.player_name
+    
+class FavPlayers(models.Model):
+    title = models.CharField(max_length=150)
+    players = models.ManyToManyField(Player)
+    
+    def __str__(self):
+        return self.title

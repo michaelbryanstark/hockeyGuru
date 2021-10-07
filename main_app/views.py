@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.views import View 
 from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
-from .models import Team, Player
+from .models import Team, Player, FavPlayers
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
 from django.urls import reverse
@@ -13,6 +13,10 @@ from django.urls import reverse
 # Here we will be creating a class called Home and extending it from the View class
 class Home(TemplateView):
     template_name = "home.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["favplayers"] = FavPlayers.objects.all()
+        return context
     
 class About(TemplateView):
     template_name = "about.html"
@@ -42,6 +46,11 @@ class TeamDetail(DetailView):
     model = Team
     template_name = "team_detail.html"
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["favplayers"] = FavPlayers.objects.all()
+        return context
+    
 class TeamUpdate(UpdateView):
     model = Team
     fields = ['name', 'img', 'bio']
@@ -61,3 +70,12 @@ class PlayerCreate(View):
         team = Team.objects.get(pk=pk)
         Player.objects.create(player_name=player_name, jersey_number=jersey_number, team=team)
         return redirect('team_detail', pk=pk)
+    
+class FavPlayerPlayerAssoc(View):
+    def get(self, request, pk, player_pk):
+        assoc = request.GET.get("assoc")
+        if assoc == "remove":
+            FavPlayers.objects.get(pk=pk).players.remove(player_pk)
+        if assoc == "add":
+            FavPlayers.objects.get(pk=pk).players.add(player_pk)
+        return redirect('home')
