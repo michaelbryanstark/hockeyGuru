@@ -22,6 +22,11 @@
       </span>
     </a>
   </div>
+  <div class="detail__about">
+    <h4 class="title is-4">About</h4>
+    <p>{{team.bio}}</p>
+  </div>
+  <br>
   <form class="mb-5" action="{% url 'player_create' team.pk %}" method="post">
     {% csrf_token %}
     <div class="field has-addons">
@@ -97,10 +102,7 @@
     {% endfor %}
   </div>
   </div>
-  <div class="detail__about">
-    <h4 class="title is-4">About</h4>
-    <p>{{team.bio}}</p>
-  </div>
+  
 </div>
 
 {% endblock %}
