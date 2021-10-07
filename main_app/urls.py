@@ -12,8 +12,9 @@ urlpatterns = [
          views.TeamUpdate.as_view(), name="team_update"),
     path('teams/<int:pk>/delete',
          views.TeamDelete.as_view(), name="team_delete"),
-    path('teams/<int:pk>/playerss/new/',
+    path('teams/<int:pk>/players/new/',
          views.PlayerCreate.as_view(), name="player_create"),
     path('favplayers/<int:pk>/players/<int:player_pk>/',
          views.FavPlayerPlayerAssoc.as_view(), name="favplayer_player_assoc"),
+    path('favplayers/new/', views.FavPlayerCreate.as_view(), name="favplayer_create"),
 ]

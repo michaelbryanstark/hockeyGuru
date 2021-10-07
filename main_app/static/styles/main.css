@@ -1,5 +1,5 @@
 body {
-    background-color: #121212;
+    background-color: #4e0909;
     color: #ffffff;
     min-height: 100vh;
   }
@@ -101,3 +101,5 @@ body {
     background-color: hsla(0, 0%, 100%, 0.1);
     cursor: pointer;
   }
+
+  

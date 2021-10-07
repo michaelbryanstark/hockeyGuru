@@ -79,3 +79,10 @@ class FavPlayerPlayerAssoc(View):
         if assoc == "add":
             FavPlayers.objects.get(pk=pk).players.add(player_pk)
         return redirect('home')
+    
+class FavPlayerCreate(CreateView):
+    model = FavPlayers
+    fields = ['title', 'players']
+    template_name = "favplayer_create.html"
+    def get_success_url(self):
+        return redirect('home')
