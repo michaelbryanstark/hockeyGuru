@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect, reverse
 from django.views import View 
-from django.shortcuts import redirect
 from django.views.generic.base import TemplateView
 from .models import Team, Player, FavPlayers
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView
-from django.urls import reverse
+
 
 
 # Create your views here.
@@ -20,7 +23,8 @@ class Home(TemplateView):
     
 class About(TemplateView):
     template_name = "about.html"
-    
+
+@method_decorator(login_required, name='dispatch')   
 class TeamList(TemplateView):
     template_name = "team_list.html"
 
@@ -28,10 +32,10 @@ class TeamList(TemplateView):
         context = super().get_context_data(**kwargs)
         name = self.request.GET.get("name")
         if name != None:
-            context["teams"] = Team.objects.filter(name__icontains=name)
+            context["teams"] = Team.objects.filter(name__icontains=name, user=self.request.user)
             context["header"] = f"Searching for {name}"
         else:
-            context["teams"] = Team.objects.all() # this is where we add the key into our context object for the view to use
+            context["teams"] = Team.objects.filter(user=self.request.user) 
             context["header"] = "Teams"
         return context
     
@@ -39,7 +43,12 @@ class TeamCreate(CreateView):
     model = Team
     fields = ['name', 'img', 'bio']
     template_name = "team_create.html"
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(TeamCreate, self).form_valid(form)
+
     def get_success_url(self):
+        print(self.kwargs)
         return reverse('team_detail', kwargs={'pk': self.object.pk})
     
 class TeamDetail(DetailView):
@@ -86,3 +95,20 @@ class FavPlayerCreate(CreateView):
     template_name = "favplayer_create.html"
     def get_success_url(self):
         return redirect('home')
+    
+class Signup(View):
+    # show a form to fill out
+    def get(self, request):
+        form = UserCreationForm()
+        context = {"form": form}
+        return render(request, "registration/signup.html", context)
+    # on form submit validate the form and login the user.
+    def post(self, request):
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("team_list")
+        else:
+            context = {"form": form}
+            return render(request, "registration/signup.html", context)
