@@ -17,4 +17,5 @@ urlpatterns = [
     path('favplayers/<int:pk>/players/<int:player_pk>/',
          views.FavPlayerPlayerAssoc.as_view(), name="favplayer_player_assoc"),
     path('favplayers/new/', views.FavPlayerCreate.as_view(), name="favplayer_create"),
+    path('accounts/signup/', views.Signup.as_view(), name="signup")
 ]
